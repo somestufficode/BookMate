@@ -49,6 +49,7 @@ const BookForm = () => {
         onChangeText={(text) => setTitle(text)}
         placeholder="Enter book title"
       />
+        <Text>Author:</Text>
         <TextInput
         value={author}
         onChangeText={(text) => setAuthor(text)}
