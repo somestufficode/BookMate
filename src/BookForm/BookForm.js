@@ -1,32 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 
 const BookForm = () => {
   const [title, setTitle] = useState('');
+  const [user, setUser] = useState(null);
 
-  const createProfile = async (uid) => {
-    try {
-        await database().ref(`/users/${uid}`).set({ name });
-    } catch (error) {
-        console.error('Error creating user profile:', error);
-    }
-}
+  useEffect(() => {
+    const unsubscribe = auth().onAuthStateChanged((user) => {
+      setUser(user);
+    });
 
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const handleSubmit = async () => {
     try {
-      await database().ref(`/users/uid/`)collection('books').add({
+      if (!user) {
+        console.log('User not signed in. Cannot add book.');
+        return;
+      }
+
+      const uid = user.uid;
+
+      // Now you can use 'uid' to reference the current user's identifier
+      await database().ref(`/users/${uid}/books`).push({
         title: title,
         // Add other fields
       });
+
       console.log('Book added successfully!');
       // You can navigate or show a success message here
     } catch (error) {
       console.error('Error adding book: ', error);
     }
   };
+
 
   return (
     <View>
