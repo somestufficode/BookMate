@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "996917489489",
+    "project_id": "bookmate-4810c",
+    "storage_bucket": "bookmate-4810c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996917489489:android:28e84232051cd94242ad70",
+        "android_client_info": {
+          "package_name": "com.BookMate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiQUiG5QiNVD6t_-sCpu67y9DHag4kv3o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
