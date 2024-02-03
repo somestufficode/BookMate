@@ -5,6 +5,7 @@ import database from '@react-native-firebase/database';
 
 const BookForm = () => {
   const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -47,6 +48,11 @@ const BookForm = () => {
         value={title}
         onChangeText={(text) => setTitle(text)}
         placeholder="Enter book title"
+      />
+        <TextInput
+        value={author}
+        onChangeText={(text) => setAuthor(text)}
+        placeholder="Enter book author"
       />
       {/* Add other input fields for book details */}
       <Button title="Submit" onPress={handleSubmit} />
