@@ -1,34 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Register from './src/Register/Register';
-import Main from './src/Main/Main';
-import BookForm from './src/BookForm/BookForm';
-import BookSearch from './src/BookSearch/BookSearch';
+// App.js
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import 'react-native-gesture-handler';
-
+import BookForm from './src/BookForm/BookForm';
+import BookDetailsPage from './src/BookDetails/BookDetails';
+import AdditionalBookDetails from './src/AdditionalBookDetails/AdditionalBookDetails';
+import BookSearch from './src/BookSearch/BookSearch';
+import Register from './src/Register/Register';
+import Main from './src/Main/Main';
+import BookClubSize from './src/BookClubSize/BookClubSize';
+import BookClubFrequency from './src/BookClubFrequency/BookClubFrequency';
 
 const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
   return (
     <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen name="BookSearch" component={BookSearch} />
-                <Stack.Screen name="BookForm" component={BookForm} />
-                <Stack.Screen name="Register" component={Register} />
-                <Stack.Screen name="Main" component={Main} />
-            </Stack.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen name="BookForm" component={BookForm} />
+        <Stack.Screen name="BookDetails" component={BookDetailsPage} />
+        <Stack.Screen name="AdditionalBookDetails" component={AdditionalBookDetails} />
+        <Stack.Screen name="BookSearch" component={BookSearch} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="BookClubSize" component={BookClubSize} />
+        <Stack.Screen name="BookClubFrequency" component={BookClubFrequency} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ccc',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

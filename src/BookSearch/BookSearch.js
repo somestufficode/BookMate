@@ -43,7 +43,7 @@ const BookSearch = () => {
       <TextInput
         placeholder="Enter book title"
         value={searchTerm}
-        onChangeText={searchBooks} 
+        onChangeText={searchBooks} // Trigger searchBooks function on text change
       />
 
       <FlatList

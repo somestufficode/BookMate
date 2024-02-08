@@ -1,64 +1,100 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import database from '@react-native-firebase/database';
+import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const BookForm = () => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [user, setUser] = useState(null);
+const SearchPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged((user) => {
-      setUser(user);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  const handleSubmit = async () => {
-    try {
-      if (!user) {
-        console.log('User not signed in. Cannot add book.');
-        return;
+    // Implement the searchBooks function to search for books
+    const searchBooks = async () => {
+      try {
+        setIsSearching(true);
+        if (searchTerm === '') {
+          setSearchResults([]);
+          setIsSearching(false);
+          return;
+        }
+        const apiKey = 'AIzaSyDN5R0GHTM6PXsT9QzM8p1JToNsY-IKYi8';
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&key=${apiKey}`;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        if (data.items) {
+          setSearchResults(data.items);
+        } else {
+          setSearchResults([]);
+        }
+        setIsSearching(false);
+      } catch (error) {
+        console.error('Error searching for books:', error);
+        setIsSearching(false);
       }
+    };
 
-      const uid = user.uid;
+    const timeoutId = setTimeout(searchBooks, 300); // Debounce the search to avoid making too many requests while typing
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
 
-      // Now you can use 'uid' to reference the current user's identifier
-      await database().ref(`/users/${uid}/books`).push({
-        title: title,
-        // Add other fields
-      });
-
-      console.log('Book added successfully!');
-      // You can navigate or show a success message here
-    } catch (error) {
-      console.error('Error adding book: ', error);
-    }
+  const handleBookSelection = (book) => {
+    navigation.navigate('BookDetails', { book });
   };
 
-
   return (
-    <View>
-      <Text>Title:</Text>
+    <View style={styles.container}>
       <TextInput
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-        placeholder="Enter book title"
+        style={styles.input}
+        placeholder="Search for a book..."
+        value={searchTerm}
+        onChangeText={setSearchTerm}
       />
-        <Text>Author:</Text>
-        <TextInput
-        value={author}
-        onChangeText={(text) => setAuthor(text)}
-        placeholder="Enter book author"
+      {isSearching && <Text style={styles.loadingText}>Searching...</Text>}
+      <FlatList
+        data={searchResults}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handleBookSelection(item)}>
+            <View style={styles.dropdownItem}>
+              <Text>{item.volumeInfo.title}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
       />
-      {/* Add other input fields for book details */}
-      <Button title="Submit" onPress={handleSubmit} />
     </View>
   );
 };
 
-export default BookForm;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+  },
+  input: {
+    width: '100%',
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 20,
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+    borderRadius: 20,
+  },
+  loadingText: {
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+  },
+});
+
+export default SearchPage;
