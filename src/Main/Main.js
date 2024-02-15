@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import Swiper from 'react-native-swiper';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+// import Swiper from 'react-native-swiper';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBooks } from '../../store/actions';
 
@@ -30,6 +30,7 @@ const Main = () => {
   const currentBook = books[currentBookId];
 
   return (
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
       {currentBook && currentBook.selectedBook && ( // Check if currentBook and selectedBook are defined
         <View style={styles.card}>
@@ -50,10 +51,14 @@ const Main = () => {
         <Text style={styles.buttonText}>Next</Text>
       </TouchableOpacity>
     </View>
+    </ScrollView>
   );
  };  
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
