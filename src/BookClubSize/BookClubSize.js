@@ -1,13 +1,26 @@
 // BookClubSize.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const BookClubSize = ({ navigation }) => {
-    
-    const handleClubSizeSelection = (size) => {
-        // Navigate to the frequency component with the selected club size
-        navigation.navigate('BookClubFrequency', { clubSize: size });
+const BookClubSize = ({ route, navigation }) => {
+    const [clubSize, setSelectedSize] = useState('');
+
+    const { selectedBook, bookClub, bookPartner } = route.params;
+
+    const handleClubSizeSelection = (clubSize) => {
+        setSelectedSize(clubSize);
+        navigation.navigate('BookClubFrequency', { 
+            clubSize: clubSize,
+            selectedBook: selectedBook,
+            bookClub: bookClub,
+            bookPartner: bookPartner
+        });
       };
+
+
+    useEffect(() => {
+        console.log('Selected Book on ClubSize:', clubSize);
+    }, [clubSize]);
 
   return (
     <View style={styles.container}>

@@ -37,7 +37,6 @@ const BookSearch = () => {
     console.log('Selected book:', book); 
   };
 
-
   return (
     <View>
       <TextInput

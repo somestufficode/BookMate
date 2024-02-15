@@ -1,11 +1,13 @@
 // BookDetailsPage.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 const BookDetailsPage = ({ route }) => {
     const navigation = useNavigation();
+    const [selectedBook, setSelectedBook] = useState(null);
+
 
     const { book } = route.params || {}; 
 
@@ -15,8 +17,14 @@ const BookDetailsPage = ({ route }) => {
     
     const { title, authors, description, imageLinks } = book.volumeInfo;
 
+    useEffect(() => {
+        console.log('Selected Book:', selectedBook);
+    }, [selectedBook]);
+    
+
     const handleAddBook = () => {
-        navigation.navigate('AdditionalBookDetails');
+        setSelectedBook(book);
+        navigation.navigate('AdditionalBookDetails', { selectedBook: book }); 
     };
 
 

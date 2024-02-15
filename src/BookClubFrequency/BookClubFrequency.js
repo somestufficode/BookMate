@@ -1,12 +1,29 @@
 // BookPartnerFrequency.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const BookClubFrequency = ({ navigation }) => {
-  
-  const handleFrequencySelection = (frequency) => {
-    // Navigate to the next screen or perform any other action based on frequency selection
+const BookClubFrequency = ({ route, navigation }) => {
+  const [selectedFrequency, setFrequency] = useState('');
+
+  const { selectedBook, bookClub, bookPartner, clubSize } = route.params || {};
+
+  const handleFrequencySelection = (selectedFrequency) => {
+    setFrequency(selectedFrequency);
+    console.log(selectedFrequency);
+
+    navigation.navigate('BookBlurb', {
+      selectedBook: selectedBook,
+      bookClub: bookClub,
+      bookPartner: bookPartner,
+      clubSize: clubSize,
+      selectedFrequency: selectedFrequency 
+    });
   };
+
+
+  useEffect(() => {
+    console.log('Selected Book on Club Freq:', selectedBook);
+}, [selectedBook]);
 
   return (
     <View style={styles.container}>

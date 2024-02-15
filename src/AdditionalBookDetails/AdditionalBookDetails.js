@@ -1,25 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const AdditionalBookDetails = ({ navigation }) => {
-  // State variables to manage user selections
-  const [bookPartnerCount, setBookPartnerCount] = useState('');
-  const [meetingFrequency, setMeetingFrequency] = useState('');
+const AdditionalBookDetails = ({ route, navigation }) => {
+  const [bookPartner, setBookPartner] = useState(false);
+  const [bookClub, setBookClub] = useState(false);
+
+  const { selectedBook } = route.params || {};
 
   const handleBookPartner = () => {
-    // Navigate to the screen for selecting book partner frequency
-    navigation.navigate('BookClubFrequency');
+    setBookPartner(true);
+    setBookClub(false);
+    navigation.navigate('BookClubFrequency', {
+        selectedBook: route.params.selectedBook,
+        bookPartner: true,
+        bookClub: false
+    });
   };
 
   const handleBookClub = () => {
-    // Navigate to the screen for selecting book club size
-    navigation.navigate('BookClubSize');
+    setBookClub(true);
+    setBookPartner(false);
+    navigation.navigate('BookClubSize', {
+        selectedBook: route.params.selectedBook,
+        bookClub: true,
+        bookPartner: false
+    });
   };
 
-  const handleSubmit = () => {
-    console.log('Book partner count:', bookPartnerCount);
-    console.log('Meeting frequency:', meetingFrequency);
-  };
+  useEffect(() => {
+    console.log('Selected Book on Additional:', selectedBook);
+    console.log('Book Partner:', bookPartner);
+    console.log('Book Club:', bookClub);
+  }, [selectedBook, bookPartner, bookClub]);
 
   return (
     <View style={styles.container}>
