@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
-import Main from '../Main/Main';
+// import Main from '../Main/Main';
 
 export const Register = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -12,7 +12,7 @@ export const Register = ({ navigation }) => {
 
     const createProfile = async (uid) => {
         try {
-            await database().ref(`/users/${uid}`).set({ name });
+            await database().ref(`/users/${uid}`).set({ name, email, password });
         } catch (error) {
             console.error('Error creating user profile:', error);
         }
@@ -25,7 +25,6 @@ export const Register = ({ navigation }) => {
                     email,
                     password
                 );
-
                 if (response.user) {
                     await createProfile(response.user.uid);
                     navigation.navigate('Main');

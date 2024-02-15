@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux'; 
 
 const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const navigation = useNavigation();
+  const state = useSelector(state => state); // Get the entire state
+  console.log('Current State at Book Form:', state);
+
+  const currentUser = useSelector(state => state.user);
 
   useEffect(() => {
     // Implement the searchBooks function to search for books
@@ -44,6 +49,7 @@ const SearchPage = () => {
 
   return (
     <View style={styles.container}>
+      <Text>{currentUser ? `Logged in as: ${currentUser.user.email}` : 'Not logged in'}</Text>
       <TextInput
         style={styles.input}
         placeholder="Search for a book..."

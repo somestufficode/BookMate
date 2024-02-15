@@ -1,13 +1,22 @@
 import React, { useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import database from '@react-native-firebase/database';
+
 
 const FinalBookForm = ({ route }) => {
 
     const { selectedBook, bookClub, bookPartner, clubSize, blurb, selectedFrequency } = route.params || {};
+    const currentUser = useSelector(state => state.user);
+    const navigation = useNavigation();
+    const state = useSelector(state => state); // Get the entire state
+    console.log('Current State at FinalBookForm:', state);
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     // Process the form data, e.g., send it to Firebase
     const formData = {
+
       selectedBook,
       bookClub, 
       bookPartner,
@@ -18,8 +27,12 @@ const FinalBookForm = ({ route }) => {
     };
 
     console.log('Form data:', formData);
-    // Example of sending data to Firebase:
-    // firebase.database().ref('books').push(formData);
+
+    // how do i make sure that the id for the book is consistent for both database pushes
+    await database().ref('books').push(formData);
+    await database().ref(`users/${currentUser.user.uid}/books`).push(formData);
+    navigation.navigate('Main');
+    
   };
 
   useEffect(() => {

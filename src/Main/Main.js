@@ -1,86 +1,107 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Swiper from 'react-native-swiper';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchBooks } from '../../store/actions';
 
 const Main = () => {
-  const [cards, setCards] = useState([
-    { id: 1, imageUrl: 'https://example.com/image1.jpg' },
-    { id: 2, imageUrl: 'https://example.com/image2.jpg' },
-    // Add more cards as needed
-  ]);
+  const dispatch = useDispatch();
+  const { books } = useSelector(state => state.books);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleSwipeLeft = () => {
-    // Handle logic for swiping left
+  useEffect(() => {
+    dispatch(fetchBooks());
+  }, [dispatch]);
+
+  const handleNext = () => {
+    if (currentIndex < Object.values(books).length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
-  const handleSwipeRight = () => {
-    // Handle logic for swiping right
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
   };
+
+  const bookIds = Object.keys(books);
+  const currentBookId = bookIds[currentIndex];
+  const currentBook = books[currentBookId];
 
   return (
     <View style={styles.container}>
-      <Swiper
-        cards={cards}
-        renderCard={(card) => (
-          <View style={styles.card}>
-            <Image source={{ uri: card.imageUrl }} style={styles.cardImage} />
+      {currentBook && currentBook.selectedBook && ( // Check if currentBook and selectedBook are defined
+        <View style={styles.card}>
+          <Image source={{ uri: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail }} style={styles.bookImage} />
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>{currentBook.selectedBook.volumeInfo.title}</Text>
+            <Text style={styles.author}>By {currentBook.selectedBook.volumeInfo.authors.join(', ')}</Text>
+            <Text style={styles.blurb}>{currentBook.blurb}</Text>
+            <Text style={styles.description}>{currentBook.selectedBook.volumeInfo.description}</Text>
+            {/* Add additional book information here */}
           </View>
-        )}
-        onSwipedLeft={handleSwipeLeft}
-        onSwipedRight={handleSwipeRight}
-        cardIndex={0}
-        stackSize={3}
-        stackScale={10}
-        stackSeparation={14}
-        useViewOverflow={Platform.OS === 'ios'}
-      />
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity onPress={handleSwipeLeft} style={[styles.button, styles.dislikeButton]}>
-          <Text style={styles.buttonText}>Dislike</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSwipeRight} style={[styles.button, styles.likeButton]}>
-          <Text style={styles.buttonText}>Like</Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      )}
+      <TouchableOpacity onPress={handlePrevious} style={[styles.button, styles.previousButton]}>
+        <Text style={styles.buttonText}>Previous</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleNext} style={[styles.button, styles.nextButton]}>
+        <Text style={styles.buttonText}>Next</Text>
+      </TouchableOpacity>
     </View>
   );
-};
+ };  
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   card: {
-    flex: 1,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#E8E8E8',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 20,
+    margin: 10,
   },
-  cardImage: {
-    flex: 1,
+  bookImage: {
+    width: 200,
+    height: 300,
+    resizeMode: 'cover',
+    marginBottom: 10,
     borderRadius: 10,
   },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    position: 'absolute',
-    bottom: 20,
-    width: '100%',
+  textContainer: {
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  blurb: {
+    fontSize: 18,
+    textAlign: 'center',
   },
   button: {
-    padding: 15,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 100,
+    position: 'absolute',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  dislikeButton: {
-    backgroundColor: '#E5566D',
+  previousButton: {
+    left: 10,
+    bottom: 20,
   },
-  likeButton: {
-    backgroundColor: '#4CCC93',
+  nextButton: {
+    right: 10,
+    bottom: 20,
   },
   buttonText: {
     color: 'white',

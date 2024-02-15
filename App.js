@@ -12,6 +12,7 @@ import BookClubSize from './src/BookClubSize/BookClubSize';
 import BookClubFrequency from './src/BookClubFrequency/BookClubFrequency';
 import BookBlurb from './src/BookBlurb/BookBlurb';
 import FinalBookForm from './src/FinalBookForm/FinalBookForm';
+import Login from './src/Login/Login';
 import { Provider } from 'react-redux'; // Import Provider from react-redux
 import store from './store/store'; // Import your Redux store
 
@@ -22,12 +23,13 @@ const App = () => {
     <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="BookForm" component={BookForm} />
         <Stack.Screen name="BookDetails" component={BookDetailsPage} />
         <Stack.Screen name="AdditionalBookDetails" component={AdditionalBookDetails} />
         {/* <Stack.Screen name="BookSearch" component={BookSearch} /> */}
         <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Main" component={Main} />
         <Stack.Screen name="BookClubSize" component={BookClubSize} />
         <Stack.Screen name="BookClubFrequency" component={BookClubFrequency} />
         <Stack.Screen name="BookBlurb" component={BookBlurb} />

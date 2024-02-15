@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Text, Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useSelector } from '@react-navigation/native';
 
 const BookDetailsPage = ({ route }) => {
     const navigation = useNavigation();
     const [selectedBook, setSelectedBook] = useState(null);
+    const state = useSelector(state => state); // Get the entire state
+    console.log('Current State at Details:', state);
 
 
     const { book } = route.params || {}; 
