@@ -23,12 +23,11 @@ const App = () => {
     <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="BookForm" component={BookForm} />
         <Stack.Screen name="BookDetails" component={BookDetailsPage} />
         <Stack.Screen name="AdditionalBookDetails" component={AdditionalBookDetails} />
-        {/* <Stack.Screen name="BookSearch" component={BookSearch} /> */}
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="BookClubSize" component={BookClubSize} />
         <Stack.Screen name="BookClubFrequency" component={BookClubFrequency} />

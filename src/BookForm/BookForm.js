@@ -8,13 +8,14 @@ const SearchPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const navigation = useNavigation();
-  const state = useSelector(state => state); // Get the entire state
-  console.log('Current State at Book Form:', state);
+  // const state = useSelector(state => state);
+  // console.log('Current State at  Book Form:', state);
 
   const currentUser = useSelector(state => state.user);
+  
+  console.log('this is current user:', currentUser)
 
   useEffect(() => {
-    // Implement the searchBooks function to search for books
     const searchBooks = async () => {
       try {
         setIsSearching(true);
@@ -49,7 +50,7 @@ const SearchPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text>{currentUser ? `Logged in as: ${currentUser.user.email}` : 'Not logged in'}</Text>
+      <Text>{currentUser ? `Logged in as: ${currentUser.email}` : 'Not logged in'}</Text>
       <TextInput
         style={styles.input}
         placeholder="Search for a book..."

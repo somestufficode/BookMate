@@ -10,8 +10,8 @@ const FinalBookForm = ({ route }) => {
     const { selectedBook, bookClub, bookPartner, clubSize, blurb, selectedFrequency } = route.params || {};
     const currentUser = useSelector(state => state.user);
     const navigation = useNavigation();
-    const state = useSelector(state => state); // Get the entire state
-    console.log('Current State at FinalBookForm:', state);
+    // const state = useSelector(state => state); // Get the entire state
+    // console.log('Current State at FinalBookForm:', state);
 
   const handleSubmit = async() => {
     // Process the form data, e.g., send it to Firebase
@@ -30,7 +30,7 @@ const FinalBookForm = ({ route }) => {
 
     // how do i make sure that the id for the book is consistent for both database pushes
     await database().ref('books').push(formData);
-    await database().ref(`users/${currentUser.user.uid}/books`).push(formData);
+    await database().ref(`users/${currentUser.uid}/books`).push(formData);
     navigation.navigate('Main');
     
   };

@@ -7,8 +7,8 @@ import { useNavigation, useSelector } from '@react-navigation/native';
 const BookDetailsPage = ({ route }) => {
     const navigation = useNavigation();
     const [selectedBook, setSelectedBook] = useState(null);
-    const state = useSelector(state => state); // Get the entire state
-    console.log('Current State at Details:', state);
+    // const state = useSelector(state => state); // Get the entire state
+    // console.log('Current State at Details:', state);
 
 
     const { book } = route.params || {}; 

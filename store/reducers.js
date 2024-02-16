@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
-import postsReducer from './postsReducer';
+// import postsReducer from './postsReducer';
 import userReducer from './userReducer';
 import booksReducer from './booksReducer';
+// import sessionReducer from './sessionReducer';
 
 const rootReducer = combineReducers({
     // session,
@@ -9,7 +10,8 @@ const rootReducer = combineReducers({
     // session: sessionReducer,
     books: booksReducer,
     user: userReducer,
-    posts: postsReducer
+    // session: sessionReducer
+    // posts: postsReducer
   });
 
 export default rootReducer

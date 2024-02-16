@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Button } from 'react-native';
 // import Swiper from 'react-native-swiper';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBooks } from '../../store/actions';
+import { useNavigation } from '@react-navigation/native';
 
 const Main = () => {
   const dispatch = useDispatch();
   const { books } = useSelector(state => state.books);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     dispatch(fetchBooks());
@@ -18,6 +21,11 @@ const Main = () => {
       setCurrentIndex(currentIndex + 1);
     }
   };
+
+  const navigateToBookForm = () => {
+    navigation.navigate('BookForm'); // Replace 'BookForm' with the name of your component in the navigation stack
+  };
+
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
@@ -50,6 +58,7 @@ const Main = () => {
       <TouchableOpacity onPress={handleNext} style={[styles.button, styles.nextButton]}>
         <Text style={styles.buttonText}>Next</Text>
       </TouchableOpacity>
+      <Button title="Add Book" onPress={navigateToBookForm} />
     </View>
     </ScrollView>
   );

@@ -1,6 +1,9 @@
 const initialState = {
-    user: null,
-    isAuthenticated: false,
+        email: null,
+        name: null,
+        number: null,
+        id: null,
+        isAuthenticated: false,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -8,8 +11,12 @@ const userReducer = (state = initialState, action) => {
         case 'SET_USER':
             return {
                 ...state,
-                user: action.payload,
-                isAuthenticated: !!action.payload
+                    email: action.payload.email,
+                    name: action.payload.displayName,
+                    number: action.payload.phoneNumber,
+                    photo: action.payload.photoURL,
+                    id: action.payload.uid,
+                    isAuthenticated: !!action.payload
             };
         default:
             return state;

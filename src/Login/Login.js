@@ -2,20 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
+import { loginRequest, loginSuccess, loginFailure, setCurrentUser, setUser } from '../../store/actions';
+
 
 export const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
-    const state = useSelector(state => state); // Get the entire state
-    console.log('Current State at Login:', state);
-
+    // const state = useSelector(state => state); // Get the entire state
+    // console.log('Current State at Login:', state);
     const login = async () => {
         if (email && password) {
             try {
-                await auth().signInWithEmailAndPassword(email, password);
-                navigation.navigate('BookForm'); 
+                // Attempt to sign in with email and password
+                const userCredential = await auth().signInWithEmailAndPassword(email, password);
+                console.log("user:",userCredential.user)
+                console.log("cred", userCredential)
+
+                 
+                        // Extract necessary user information
+                        const user = {
+                            email: userCredential.user.email,
+                            displayName: userCredential.user.displayName,
+                            phoneNumber: userCredential.user.phoneNumber,
+                            photoURL: userCredential.user.photoURL,
+                            uid: userCredential.user.uid,
+                            // Add any other necessary fields
+                        };
+
+                    // Dispatch setUser action with extracted user data
+                    dispatch(setUser(user));
+        
+                // Navigate to the desired screen
+                navigation.navigate('BookForm');
             } catch (error) {
+                // Handle login failure
                 console.error('Error logging in:', error);
                 Alert.alert('Oops', 'Invalid email or password. Please try again.');
             }
@@ -24,18 +45,20 @@ export const Login = ({ navigation }) => {
         }
     };
 
-    useEffect(() => {
-        const unsubscribe = auth().onAuthStateChanged((user) => {
-            if (user) {
-                console.log(user)
-                dispatch({ type: 'SET_USER', payload: user });
-            } else {
-                console.log('where is:', user)
-                dispatch({ type: 'SET_USER', payload: null });
-            }
-        });
-        return unsubscribe;
-    }, [dispatch]);
+    // useEffect(() => {
+    //     const unsubscribe = auth().onAuthStateChanged((user) => {
+    //         if (user) {
+    //             console.log(user)
+    //             dispatch({ type: 'SET_USER', payload: user });
+    //         } else {
+    //             console.log('where is:', user)
+    //             dispatch({ type: 'SET_USER', payload: null });
+    //         }
+    //     });
+    //     return unsubscribe;
+    // }, [dispatch]);
+
+    
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
