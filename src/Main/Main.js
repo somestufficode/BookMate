@@ -52,11 +52,13 @@ const Main = () => {
           </TouchableOpacity>
         )}
         <View style={styles.textContainer}>
-          <Text style={styles.title}>{currentBook.selectedBook.volumeInfo.title}</Text>
-          <Text style={styles.author}>By {currentBook.selectedBook.volumeInfo.authors.join(', ')}</Text>
-          {/* <Text style={styles.blurb}>{currentBook.blurb}</Text> */}
-          <Text style={styles.description}>{currentBook.selectedBook.volumeInfo.description}</Text>
-          {/* Add additional book information here */}
+          {currentBook && currentBook.selectedBook && (
+            <>
+              <Text style={styles.title}>{currentBook.selectedBook.volumeInfo.title}</Text>
+              <Text style={styles.author}>By {currentBook.selectedBook.volumeInfo.authors.join(', ')}</Text>
+              <Text style={styles.description}>{currentBook.selectedBook.volumeInfo.description}</Text>
+            </>
+          )}
         </View>
         <TouchableOpacity onPress={handlePrevious} style={[styles.button, styles.previousButton]}>
           <Text style={styles.buttonText}>Previous</Text>
@@ -68,7 +70,7 @@ const Main = () => {
       </View>
     </ScrollView>
   );
-};
+};  
 
 const styles = StyleSheet.create({
   scrollContainer: {
