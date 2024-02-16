@@ -30,9 +30,13 @@ const FinalBookForm = ({ route }) => {
 
     // how do i make sure that the id for the book is consistent for both database pushes
     await database().ref('books').push(formData);
-    await database().ref(`users/${currentUser.uid}/books`).push(formData);
-    navigation.navigate('Main');
-    
+    await database().ref(`users/${currentUser.id}/books`).push(formData);
+
+    navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+    });    
+
   };
 
   useEffect(() => {
@@ -42,6 +46,7 @@ const FinalBookForm = ({ route }) => {
     console.log('this partner:', bookPartner);
     console.log('this partner club:', clubSize);
   })
+
 
   return (
     <View style={styles.container}>

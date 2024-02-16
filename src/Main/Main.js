@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Button } from 'react-native';
-// import Swiper from 'react-native-swiper';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBooks } from '../../store/actions';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +9,6 @@ const Main = () => {
   const { books } = useSelector(state => state.books);
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigation = useNavigation();
-
 
   useEffect(() => {
     dispatch(fetchBooks());
@@ -23,13 +21,21 @@ const Main = () => {
   };
 
   const navigateToBookForm = () => {
-    navigation.navigate('BookForm'); // Replace 'BookForm' with the name of your component in the navigation stack
+    navigation.navigate('BookForm');
   };
-
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const handlePhotoPress = () => {
+    const currentBookId = Object.keys(books)[currentIndex];
+    const currentBook = books[currentBookId];
+    if (currentBook && currentBook.user) {
+      // Handle navigation or rendering user info
+      console.log('User info:', currentBook.user);
     }
   };
 
@@ -39,30 +45,30 @@ const Main = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-    <View style={styles.container}>
-      {currentBook && currentBook.selectedBook && ( // Check if currentBook and selectedBook are defined
-        <View style={styles.card}>
-          <Image source={{ uri: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail }} style={styles.bookImage} />
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>{currentBook.selectedBook.volumeInfo.title}</Text>
-            <Text style={styles.author}>By {currentBook.selectedBook.volumeInfo.authors.join(', ')}</Text>
-            <Text style={styles.blurb}>{currentBook.blurb}</Text>
-            <Text style={styles.description}>{currentBook.selectedBook.volumeInfo.description}</Text>
-            {/* Add additional book information here */}
-          </View>
+      <View style={styles.container}>
+        {currentBook && currentBook.selectedBook && (
+          <TouchableOpacity onPress={handlePhotoPress} style={styles.imageContainer}>
+            <Image source={{ uri: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail }} style={styles.bookImage} />
+          </TouchableOpacity>
+        )}
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{currentBook.selectedBook.volumeInfo.title}</Text>
+          <Text style={styles.author}>By {currentBook.selectedBook.volumeInfo.authors.join(', ')}</Text>
+          {/* <Text style={styles.blurb}>{currentBook.blurb}</Text> */}
+          <Text style={styles.description}>{currentBook.selectedBook.volumeInfo.description}</Text>
+          {/* Add additional book information here */}
         </View>
-      )}
-      <TouchableOpacity onPress={handlePrevious} style={[styles.button, styles.previousButton]}>
-        <Text style={styles.buttonText}>Previous</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleNext} style={[styles.button, styles.nextButton]}>
-        <Text style={styles.buttonText}>Next</Text>
-      </TouchableOpacity>
-      <Button title="Add Book" onPress={navigateToBookForm} />
-    </View>
+        <TouchableOpacity onPress={handlePrevious} style={[styles.button, styles.previousButton]}>
+          <Text style={styles.buttonText}>Previous</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleNext} style={[styles.button, styles.nextButton]}>
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity>
+        <Button title="Add Book" onPress={navigateToBookForm} />
+      </View>
     </ScrollView>
   );
- };  
+};
 
 const styles = StyleSheet.create({
   scrollContainer: {
@@ -70,37 +76,42 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'row', // Align items horizontally
+    justifyContent: 'flex-start', // Start from left
+    alignItems: 'flex-start', // Align items from top
+    paddingHorizontal: 20, // Add horizontal padding
+    paddingVertical: 10, // Add vertical padding
   },
-  card: {
-    justifyContent: 'center',
+  imageContainer: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 20,
-    margin: 10,
   },
   bookImage: {
-    width: 200,
-    height: 300,
+    width: 120, // Adjust image width
+    height: 180, // Adjust image height
     resizeMode: 'cover',
-    marginBottom: 10,
-    borderRadius: 10,
+    marginRight: 10, // Add margin between image and text
   },
   textContainer: {
-    alignItems: 'center',
+    maxHeight: 180, // Maximum height for the text container
+    flex: 1, // Fill remaining space
   },
   title: {
-    fontSize: 24,
+    fontSize: 18, // Decrease font size for title
     fontWeight: 'bold',
     marginBottom: 5,
   },
   blurb: {
     fontSize: 18,
     textAlign: 'center',
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  author: {
+    fontSize: 16, // Decrease font size for author
+    marginBottom: 5,
   },
   button: {
     position: 'absolute',
@@ -110,11 +121,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   previousButton: {
-    left: 10,
+    left: 20,
     bottom: 20,
   },
   nextButton: {
-    right: 10,
+    right: 20,
     bottom: 20,
   },
   buttonText: {
