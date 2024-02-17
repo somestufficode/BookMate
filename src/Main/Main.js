@@ -48,7 +48,11 @@ const Main = () => {
       <View style={styles.container}>
         {currentBook && currentBook.selectedBook && (
           <TouchableOpacity onPress={handlePhotoPress} style={styles.imageContainer}>
-            <Image source={{ uri: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail }} style={styles.bookImage} />
+            {currentBook.selectedBook.volumeInfo.imageLinks && currentBook.selectedBook.volumeInfo.imageLinks.thumbnail ? (
+              <Image source={{ uri: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail }} style={styles.bookImage} />
+            ) : (
+              <Text>No Thumbnail Available</Text>
+            )}
           </TouchableOpacity>
         )}
         <View style={styles.textContainer}>
@@ -56,7 +60,9 @@ const Main = () => {
             <>
               <Text style={styles.title}>{currentBook.selectedBook.volumeInfo.title}</Text>
               <Text style={styles.author}>By {currentBook.selectedBook.volumeInfo.authors.join(', ')}</Text>
-              <Text style={styles.description}>{currentBook.selectedBook.volumeInfo.description}</Text>
+              <Text style={styles.description}>
+                {currentBook.selectedBook.volumeInfo.description || 'No Description Available'}
+              </Text>
             </>
           )}
         </View>
@@ -69,7 +75,7 @@ const Main = () => {
         <Button title="Add Book" onPress={navigateToBookForm} />
       </View>
     </ScrollView>
-  );
+  );  
 };  
 
 const styles = StyleSheet.create({

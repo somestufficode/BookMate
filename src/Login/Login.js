@@ -34,8 +34,11 @@ export const Login = ({ navigation }) => {
                     dispatch(setUser(user));
         
                 // Navigate to the desired screen
-                navigation.navigate('BookForm');
-            } catch (error) {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Main' }],
+                });  
+                    } catch (error) {
                 // Handle login failure
                 console.error('Error logging in:', error);
                 Alert.alert('Oops', 'Invalid email or password. Please try again.');
