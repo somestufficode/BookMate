@@ -1,18 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Button } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Image, Button, ImageBackground, useWindowDimensions, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBooks } from '../../store/actions';
 import { useNavigation } from '@react-navigation/native';
+import { fetchBooks, logout } from '../../store/actions'; // assuming this is where you define your fetchBooks action
+import CardItem from '../Components/CardItem';
+import auth from '@react-native-firebase/auth'; // Import Firebase Auth module
+
 
 const Main = () => {
   const dispatch = useDispatch();
   const { books } = useSelector(state => state.books);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track user login status
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigation = useNavigation();
+  // const state = useSelector(state => state);
+
+  const user = useSelector(state => state.user);
+  
+  // console.log('state right now:', stated)
+  console.log('main user:', user)
+
 
   useEffect(() => {
     dispatch(fetchBooks());
+    const unsubscribe = auth().onAuthStateChanged(user => {
+      setIsLoggedIn(!!user); // Update isLoggedIn state based on user presence
+    });
+    // Clean up subscription
+    return unsubscribe;
   }, [dispatch]);
+
+  // const navigateToUserProfile = () => {
+  //   navigation.navigate('UserProfile'); // Replace 'UserProfile' with the actual name of your user profile screen
+  // };
+
+  const handleLogout = async () => {
+    try {
+        await auth().signOut(); // Sign out the current user
+        // Navigate to the login page or any other desired screen
+        // navigation.navigate('Login');
+        dispatch(logout());
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+      });   
+    } catch (error) {
+        console.error('Error logging out:', error);
+        // Handle any errors that occur during the logout process
+    }
+};
 
   const handleNext = () => {
     if (currentIndex < Object.values(books).length - 1) {
@@ -30,32 +66,34 @@ const Main = () => {
     }
   };
 
-  const handlePhotoPress = () => {
-    const currentBookId = Object.keys(books)[currentIndex];
-    const currentBook = books[currentBookId];
-    if (currentBook && currentBook.user) {
-      // Handle navigation or rendering user info
-      console.log('User info:', currentBook.user);
-    }
-  };
+  // const handlePhotoPress = () => {
+  //   const currentBookId = Object.keys(books)[currentIndex];
+  //   const currentBook = books[currentBookId];
+  //   if (currentBook && currentBook.user) {
+  //     // Handle navigation or rendering user info
+  //     console.log('User info:', currentBook.user);
+  //   }
+  // };
 
   const bookIds = Object.keys(books);
   const currentBookId = bookIds[currentIndex];
   const currentBook = books[currentBookId];
 
+  const isCardItemRendered = currentBook &&
+    currentBook.selectedBook &&
+    currentBook.selectedBook.volumeInfo.imageLinks &&
+    currentBook.selectedBook.volumeInfo.imageLinks.thumbnail;
+
+
+  // console.log("this is the current book:", currentBook)
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        {currentBook && currentBook.selectedBook && (
-          <TouchableOpacity onPress={handlePhotoPress} style={styles.imageContainer}>
-            {currentBook.selectedBook.volumeInfo.imageLinks && currentBook.selectedBook.volumeInfo.imageLinks.thumbnail ? (
-              <Image source={{ uri: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail }} style={styles.bookImage} />
-            ) : (
-              <Text>No Thumbnail Available</Text>
-            )}
-          </TouchableOpacity>
-        )}
-        <View style={styles.textContainer}>
+      {isCardItemRendered && (
+        <CardItem card={{ title: currentBook.selectedBook.volumeInfo.title, photo: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail, userId: currentBook.userId }} />
+      )}
+        {/* <View style={styles.textContainer}>
           {currentBook && currentBook.selectedBook && (
             <>
               <Text style={styles.title}>{currentBook.selectedBook.volumeInfo.title}</Text>
@@ -65,7 +103,7 @@ const Main = () => {
               </Text>
             </>
           )}
-        </View>
+        </View> */}
         <TouchableOpacity onPress={handlePrevious} style={[styles.button, styles.previousButton]}>
           <Text style={styles.buttonText}>Previous</Text>
         </TouchableOpacity>
@@ -73,9 +111,13 @@ const Main = () => {
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
         <Button title="Add Book" onPress={navigateToBookForm} />
+        <Button title="Logout" onPress={handleLogout} />
+        {/* <TouchableOpacity onPress={navigateToUserProfile} style={styles.button}>
+          <Text style={styles.buttonsText}>View User Profile</Text>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
-  );  
+  );
 };  
 
 const styles = StyleSheet.create({
@@ -84,61 +126,54 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    flexDirection: 'row', // Align items horizontally
-    justifyContent: 'flex-start', // Start from left
-    alignItems: 'flex-start', // Align items from top
-    paddingHorizontal: 20, // Add horizontal padding
-    paddingVertical: 10, // Add vertical padding
+    padding: 20,
+    alignItems: 'center',
   },
   imageContainer: {
+    marginBottom: 20,
     alignItems: 'center',
   },
   bookImage: {
-    width: 120, // Adjust image width
-    height: 180, // Adjust image height
-    resizeMode: 'cover',
-    marginRight: 10, // Add margin between image and text
-  },
-  textContainer: {
-    maxHeight: 180, // Maximum height for the text container
-    flex: 1, // Fill remaining space
+    width: 200,
+    height: 300,
   },
   title: {
-    fontSize: 18, // Decrease font size for title
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginTop: 10,
   },
-  blurb: {
+  author: {
     fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 10,
+    marginTop: 5,
   },
   description: {
     fontSize: 16,
-    textAlign: 'center',
-  },
-  author: {
-    fontSize: 16, // Decrease font size for author
-    marginBottom: 5,
+    marginTop: 10,
   },
   button: {
-    position: 'absolute',
-    paddingHorizontal: 20,
+    width: '100%',
     paddingVertical: 10,
     borderRadius: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
   },
   previousButton: {
-    left: 20,
-    bottom: 20,
+    backgroundColor: 'blue',
   },
   nextButton: {
-    right: 20,
-    bottom: 20,
+    backgroundColor: 'green',
+  },
+  profileButton: {
+    backgroundColor: 'orange',
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
+  },
+  buttonsText: {
+    color: 'black',
+    fontSize: 18,
   },
 });
 

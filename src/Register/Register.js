@@ -6,13 +6,13 @@ import database from '@react-native-firebase/database';
 // import Main from '../Main/Main';
 
 export const Register = ({ navigation }) => {
-    const [name, setName] = useState('');
+    const [displayName, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const createProfile = async (uid) => {
         try {
-            await database().ref(`/users/${uid}`).set({ name, email, password });
+            await database().ref(`/users/${uid}`).set({ displayName, email });
         } catch (error) {
             console.error('Error creating user profile:', error);
         }
@@ -43,7 +43,7 @@ export const Register = ({ navigation }) => {
             <Text>Register</Text>
             <TextInput
                 placeholder="Name"
-                value={name}
+                value={displayName}
                 onChangeText={text => setName(text)}
                 style={{ borderBottomWidth: 1, marginBottom: 10 }}
             />

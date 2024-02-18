@@ -9,6 +9,10 @@ export const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
+
+    const user  = useSelector(state => state.user);
+  
+    console.log('user right now at login:', user)
     // const state = useSelector(state => state); // Get the entire state
     // console.log('Current State at Login:', state);
     const login = async () => {
@@ -48,6 +52,40 @@ export const Login = ({ navigation }) => {
         }
     };
 
+    const loginWithDemoUser = async () => {
+        // Log in with the provided demo user credentials
+        const demoUserEmail = 'demo@user.io';
+        const demoUserPassword = 'password';
+
+        try {
+            const userCredential = await auth().signInWithEmailAndPassword(demoUserEmail, demoUserPassword);
+            console.log("user:", userCredential.user);
+
+            // Extract necessary user information
+            const user = {
+                email: userCredential.user.email,
+                displayName: userCredential.user.displayName,
+                phoneNumber: userCredential.user.phoneNumber,
+                photoURL: userCredential.user.photoURL,
+                uid: userCredential.user.uid,
+                // Add any other necessary fields
+            };
+
+            // Dispatch setUser action with extracted user data
+            dispatch(setUser(user));
+
+            // Navigate to the desired screen
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Main' }],
+            });
+        } catch (error) {
+            // Handle login failure
+            console.error('Error logging in with demo user:', error);
+            Alert.alert('Oops', 'Failed to log in with demo user.');
+        }
+    };
+    
     // useEffect(() => {
     //     const unsubscribe = auth().onAuthStateChanged((user) => {
     //         if (user) {
@@ -86,10 +124,16 @@ export const Login = ({ navigation }) => {
                 <Text style={{ color: 'white' }}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Register')} // Navigate to the Register component
-                style={{ backgroundColor: 'green', padding: 10, borderRadius: 5 }}
+                onPress={() => navigation.navigate('Register')} 
+                style={{ backgroundColor: 'green', padding: 10, borderRadius: 5, marginBottom: 10}}
             >
                 <Text style={{ color: 'white' }}>Create an Account</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={loginWithDemoUser} 
+                style={{ backgroundColor: 'red', padding: 10, borderRadius: 5, marginBottom: 10 }}
+            >
+                <Text style={{ color: 'white' }}>Demo User</Text>
             </TouchableOpacity>
         </View>
     );

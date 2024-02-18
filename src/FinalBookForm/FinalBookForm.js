@@ -23,6 +23,7 @@ const FinalBookForm = ({ route }) => {
       selectedFrequency,
       clubSize,
       blurb,
+      userId: currentUser.id,
       // Add other form fields as needed
     };
 
@@ -30,7 +31,7 @@ const FinalBookForm = ({ route }) => {
 
     // how do i make sure that the id for the book is consistent for both database pushes
     await database().ref('books').push(formData);
-    await database().ref(`users/${currentUser.id}/books`).push(formData);
+    // await database().ref(`users/${currentUser.id}/books`).push(formData);
 
     navigation.reset({
         index: 0,

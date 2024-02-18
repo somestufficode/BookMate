@@ -15,6 +15,7 @@ import FinalBookForm from './src/FinalBookForm/FinalBookForm';
 import Login from './src/Login/Login';
 import { Provider } from 'react-redux'; // Import Provider from react-redux
 import store from './store/store'; // Import your Redux store
+import UserProfile from './src/UserProfile/UserProfile';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,7 @@ const App = () => {
         <Stack.Screen name="BookClubFrequency" component={BookClubFrequency} />
         <Stack.Screen name="BookBlurb" component={BookBlurb} />
         <Stack.Screen name="FinalBookForm" component={FinalBookForm} />
+        <Stack.Screen name="UserProfile" component={UserProfile} />
       </Stack.Navigator>
     </NavigationContainer>
     </Provider>

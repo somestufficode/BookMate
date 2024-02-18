@@ -1,7 +1,7 @@
 import { RECEIVE_BOOKS } from './actions';
 
 const initialState = {
-  books: [],
+  books: {},
 };
 
 const booksReducer = (state = initialState, action) => {
@@ -9,7 +9,7 @@ const booksReducer = (state = initialState, action) => {
     case RECEIVE_BOOKS:
       return {
         ...state,
-        books: action.payload,
+        books: { ...state.books, ...action.payload },
       };
     default:
       return state;
