@@ -41,7 +41,7 @@ const UserProfile = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.userTitle}>This is: {userData.email}</Text>
+      {userData && <Text style={styles.userTitle}>This is: {userData.displayName}</Text>}
       <FlatList
         data={userBooks}
         showsVerticalScrollIndicator={false} 

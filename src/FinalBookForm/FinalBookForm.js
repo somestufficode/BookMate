@@ -9,6 +9,8 @@ const FinalBookForm = ({ route }) => {
 
     const { selectedBook, bookClub, bookPartner, clubSize, blurb, selectedFrequency } = route.params || {};
     const currentUser = useSelector(state => state.user);
+
+    console.log('registerd user:', currentUser)
     const navigation = useNavigation();
     // const state = useSelector(state => state); // Get the entire state
     // console.log('Current State at FinalBookForm:', state);
