@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Image, Button, ImageBackground, useWindowDimensions, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, TextInput, Button, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { fetchBooks, logout } from '../../store/actions'; // assuming this is where you define your fetchBooks action
@@ -50,21 +50,32 @@ const Main = () => {
     }
 };
 
-  const handleNext = () => {
-    if (currentIndex < Object.values(books).length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
+  // const handleNext = () => {
+  //   if (currentIndex < Object.values(books).length - 1) {
+  //     setCurrentIndex(currentIndex + 1);
+  //   }
+  // };
 
   const navigateToBookForm = () => {
     navigation.navigate('BookForm');
   };
 
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
+  // const handlePrevious = () => {
+  //   if (currentIndex > 0) {
+  //     setCurrentIndex(currentIndex - 1);
+  //   }
+  // };
+
+  const handleSearch = (searchTerm) => {
+    // Implement search functionality here
+    console.log('Search term:', searchTerm);
   };
+
+  const handleFilter = (genre) => {
+    // Implement filter functionality here
+    console.log('Filter by genre:', genre);
+  };
+
 
   // const handlePhotoPress = () => {
   //   const currentBookId = Object.keys(books)[currentIndex];
@@ -75,46 +86,61 @@ const Main = () => {
   //   }
   // };
 
-  const bookIds = Object.keys(books);
-  const currentBookId = bookIds[currentIndex];
-  const currentBook = books[currentBookId];
+  // const bookIds = Object.keys(books);
+  // const currentBookId = bookIds[currentIndex];
+  // const currentBook = books[currentBookId];
 
-  const isCardItemRendered = currentBook &&
-    currentBook.selectedBook &&
-    currentBook.selectedBook.volumeInfo.imageLinks &&
-    currentBook.selectedBook.volumeInfo.imageLinks.thumbnail;
+  // const isCardItemRendered = currentBook &&
+  //   currentBook.selectedBook &&
+  //   currentBook.selectedBook.volumeInfo.imageLinks &&
+  //   currentBook.selectedBook.volumeInfo.imageLinks.thumbnail;
 
+    const renderBookItems = () => {
+      return Object.values(books).map((book, index) => (
+        <View style={styles.bookItemContainer} key={index}>
+        <TouchableOpacity key={index} onPress={() => handleBookPress(book.id)}>
+          {book.selectedBook && book.selectedBook.volumeInfo && book.selectedBook.volumeInfo.imageLinks && (
+            <CardItem
+              card={{
+                title: book.selectedBook.volumeInfo.title,
+                photo: book.selectedBook.volumeInfo.imageLinks.thumbnail,
+                userId: book.userId, 
+                author: book.selectedBook.volumeInfo.authors[0],
+                description: book.selectedBook.volumeInfo.description,
+              }}
+            />
+          )}
+        </TouchableOpacity>
+        </View>
+      ));
+    };
 
   // console.log("this is the current book:", currentBook)
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-      {isCardItemRendered && (
-        <CardItem card={{ title: currentBook.selectedBook.volumeInfo.title, photo: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail, userId: currentBook.userId }} />
-      )}
-        {/* <View style={styles.textContainer}>
-          {currentBook && currentBook.selectedBook && (
-            <>
-              <Text style={styles.title}>{currentBook.selectedBook.volumeInfo.title}</Text>
-              <Text style={styles.author}>By {currentBook.selectedBook.volumeInfo.authors.join(', ')}</Text>
-              <Text style={styles.description}>
-                {currentBook.selectedBook.volumeInfo.description || 'No Description Available'}
-              </Text>
-            </>
-          )}
-        </View> */}
-        <TouchableOpacity onPress={handlePrevious} style={[styles.button, styles.previousButton]}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search..."
+          onChangeText={handleSearch}
+        />
+        <TouchableOpacity onPress={() => handleFilter('Fantasy')} style={styles.filterButton}>
+          <Text style={styles.buttonText}>Filter by Genre</Text>
+        </TouchableOpacity>
+        {/* {isCardItemRendered && (
+          <CardItem card={{ title: currentBook.selectedBook.volumeInfo.title, photo: currentBook.selectedBook.volumeInfo.imageLinks.thumbnail, userId: currentBook.userId }} />
+        )} */}
+        {/* <TouchableOpacity onPress={handlePrevious} style={[styles.button, styles.previousButton]}>
           <Text style={styles.buttonText}>Previous</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleNext} style={[styles.button, styles.nextButton]}>
           <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        {renderBookItems()}
+
         <Button title="Add Book" onPress={navigateToBookForm} />
         <Button title="Logout" onPress={handleLogout} />
-        {/* <TouchableOpacity onPress={navigateToUserProfile} style={styles.button}>
-          <Text style={styles.buttonsText}>View User Profile</Text>
-        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
@@ -123,58 +149,58 @@ const Main = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
+    backgroundColor: '#f8f9fa',
   },
   container: {
     flex: 1,
     padding: 20,
-    alignItems: 'center',
+    // alignItems: 'center',
+    backgroundColor: '#f8f9fa',
   },
-  imageContainer: {
+  searchInput: {
+    width: '100%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ced4da',
+    borderRadius: 20,
     marginBottom: 20,
-    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
   },
-  bookImage: {
-    width: 200,
-    height: 300,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  author: {
-    fontSize: 18,
-    marginTop: 5,
-  },
-  description: {
-    fontSize: 16,
-    marginTop: 10,
-  },
-  button: {
+  filterButton: {
     width: '100%',
     paddingVertical: 10,
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
-  },
-  previousButton: {
-    backgroundColor: 'blue',
-  },
-  nextButton: {
-    backgroundColor: 'green',
-  },
-  profileButton: {
-    backgroundColor: 'orange',
+    backgroundColor: '#007bff',
+    marginBottom: 20,
   },
   buttonText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 18,
   },
-  buttonsText: {
-    color: 'black',
-    fontSize: 18,
-  },
+  bookItemContainer: {
+    marginBottom: 30,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#ced4da',
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+    elevation: 2,
+  },  
+  // bookItemImage: {
+  //   width: '100%',
+  //   height: 150,
+  //   resizeMode: 'cover',
+  // },
+  // bookItemTitle: {
+  //   fontSize: 20,
+  //   fontWeight: 'bold',
+  //   padding: 10,
+  //   textAlign: 'center',
+  // },
 });
+
 
 export default Main;
