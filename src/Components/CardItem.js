@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.5,
         shadowRadius: 4,
-        padding: 40,
+        padding: 30,
         borderRadius: 16,
-        backgroundColor: 'white',
+        backgroundColor: '#f0f0f0',
         flexDirection: 'row',
         alignItems: 'flex-start', // Align items at the top
     },
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     },
     description: {
         fontSize: 15,
-        color: 'white',
+        color: 'black',
         // textAlign: 'right',
         textShadowColor: 'black',
         textShadowOffset: { height: 1, width: 0 },
