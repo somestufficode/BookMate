@@ -61,7 +61,7 @@ export const Register = ({ navigation }) => {
                     // Navigate to the main screen
                     navigation.reset({
                         index: 0,
-                        routes: [{ name: 'Main' }],
+                        routes: [{ name: 'MainSearch' }],
                     });
                 }
             } catch (error) {

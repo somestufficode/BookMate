@@ -7,7 +7,7 @@ import CardItem from '../Components/CardItem';
 import auth from '@react-native-firebase/auth'; // Import Firebase Auth module
 
 
-const Main = () => {
+const MainSearch = () => {
   const dispatch = useDispatch();
   const { books } = useSelector(state => state.books);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track user login status
@@ -30,9 +30,9 @@ const Main = () => {
     return unsubscribe;
   }, [dispatch]);
 
-  // const navigateToUserProfile = () => {
-  //   navigation.navigate('UserProfile'); // Replace 'UserProfile' with the actual name of your user profile screen
-  // };
+  const navigateToUserProfile = () => {
+    navigation.navigate('UserProfile'); // Replace 'UserProfile' with the actual name of your user profile screen
+  };
 
   const handleLogout = async () => {
     try {
@@ -98,7 +98,7 @@ const Main = () => {
     const renderBookItems = () => {
       return Object.values(books).map((book, index) => (
         <View style={styles.bookItemContainer} key={index}>
-        <TouchableOpacity key={index} onPress={() => handleBookPress(book.id)}>
+        <TouchableOpacity key={index}>
           {book.selectedBook && book.selectedBook.volumeInfo && book.selectedBook.volumeInfo.imageLinks && (
             <CardItem
               card={{
@@ -141,6 +141,9 @@ const Main = () => {
 
         <Button title="Add Book" onPress={navigateToBookForm} />
         <Button title="Logout" onPress={handleLogout} />
+        {/* <TouchableOpacity onPress={navigateToUserProfile} style={styles.profileButton}>
+          <Text style={styles.buttonText}>Profile</Text>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
@@ -200,7 +203,15 @@ const styles = StyleSheet.create({
   //   padding: 10,
   //   textAlign: 'center',
   // },
+  profileButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 10,
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+  },
 });
 
 
-export default Main;
+export default MainSearch;

@@ -40,7 +40,7 @@ export const Login = ({ navigation }) => {
                 // Navigate to the desired screen
                 navigation.reset({
                     index: 0,
-                    routes: [{ name: 'Main' }],
+                    routes: [{ name: 'MainSearch' }],
                 });  
                     } catch (error) {
                 // Handle login failure
@@ -77,7 +77,7 @@ export const Login = ({ navigation }) => {
             // Navigate to the desired screen
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'Main' }],
+                routes: [{ name: 'MainSearch' }],
             });
         } catch (error) {
             // Handle login failure
