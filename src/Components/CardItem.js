@@ -21,6 +21,16 @@ const CardItem = ({ card }) => {
     // const { width: screenWidth, height: screenHeight } = useWindowDimensions();
     const navigation = useNavigation();
     
+    // console.log("this is the card:", card)
+    // console.log("this is the photo:", photo)
+
+    const secureUrl = (url) => {
+        if (url && url.startsWith('http://')) {
+            return url.replace('http://', 'https://');
+        }
+        return url;
+    };
+
     const handleImagePress = () => {
         // Navigate to the user's profile screen and pass the book item's data
         navigation.navigate('UserProfile', { userId: card.userId });
@@ -38,14 +48,14 @@ const CardItem = ({ card }) => {
         <View style={styles.imageContainer}>
             <Image
                 style={styles.image}
-                source={photo ? { uri: photo } : defaultThumbnail}
+                source={photo ? { uri: secureUrl(photo) } : defaultThumbnail}
                 resizeMode="contain"
+                onError={(error) => console.log('Image error', error)}
             />
         </View>
         <View style={styles.textContainer}>
                     <Text style={styles.description} numberOfLines={3} ellipsizeMode="tail">{description}</Text>
                     <View style={styles.titleAuthorContainer}>
-
                     <Text style={styles.title}>{title}</Text>
                     <Text style={styles.author}>{author}</Text>
                     </View>
@@ -101,6 +111,7 @@ const styles = StyleSheet.create({
         // paddingTop: 10, // Add padding to separate from the content above
     },
     image: {
+        backgroundColor: 'white',
         width: '100%',
         height: '100%',
         top: 0,

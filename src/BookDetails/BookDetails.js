@@ -30,6 +30,13 @@ const BookDetailsPage = ({ route }) => {
     };
 
 
+    const secureUrl = (url) => {
+        if (url && url.startsWith('http://')) {
+            return url.replace('http://', 'https://');
+        }
+        return url;
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.detailsContainer}>
@@ -38,7 +45,7 @@ const BookDetailsPage = ({ route }) => {
           <Text style={styles.description}>{description}</Text>
         </View>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: imageLinks && imageLinks.thumbnail }} style={styles.image} />
+            <Image source={{ uri: imageLinks && secureUrl(imageLinks.thumbnail) }} style={styles.image} />
           </View>
 
           <TouchableOpacity style={styles.addButton} onPress={handleAddBook}>

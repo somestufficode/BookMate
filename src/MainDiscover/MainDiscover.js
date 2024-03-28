@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { fetchBooks, logout } from '../../store/actions'; // Assuming this is where you define your fetchBooks action
 import auth from '@react-native-firebase/auth'; // Import Firebase Auth module
-import CardItem from '../Components/CardItem';
+// import CardItem from '../Components/CardItem';
+import Carousel from 'react-native-snap-carousel'; // Import Carousel from react-native-snap-carousel
+
 
 const MainDiscovery = () => {
   const dispatch = useDispatch();

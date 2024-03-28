@@ -26,6 +26,7 @@ const MainSearch = () => {
     const unsubscribe = auth().onAuthStateChanged(user => {
       setIsLoggedIn(!!user); // Update isLoggedIn state based on user presence
     });
+    console.log(books)
     // Clean up subscription
     return unsubscribe;
   }, [dispatch]);
@@ -95,19 +96,26 @@ const MainSearch = () => {
   //   currentBook.selectedBook.volumeInfo.imageLinks &&
   //   currentBook.selectedBook.volumeInfo.imageLinks.thumbnail;
 
+  const secureUrl = (url) => {
+    if (url && url.startsWith('http://')) {
+        return url.replace('http://', 'https://');
+    }
+    return url;
+};
+
     const renderBookItems = () => {
       return Object.values(books).map((book, index) => (
         <View style={styles.bookItemContainer} key={index}>
         <TouchableOpacity key={index}>
           {book.selectedBook && book.selectedBook.volumeInfo && book.selectedBook.volumeInfo.imageLinks && (
             <CardItem
-              card={{
-                title: book.selectedBook.volumeInfo.title,
-                photo: book.selectedBook.volumeInfo.imageLinks.thumbnail,
-                userId: book.userId, 
-                author: book.selectedBook.volumeInfo.authors[0],
-                description: book.selectedBook.volumeInfo.description,
-              }}
+            card={{
+              title: book.selectedBook.volumeInfo.title,
+              photo: book.selectedBook.volumeInfo.imageLinks.thumbnail ? secureUrl(book.selectedBook.volumeInfo.imageLinks.thumbnail) : null,
+              userId: book.userId, 
+              author: book.selectedBook.volumeInfo.authors ? book.selectedBook.volumeInfo.authors[0] : 'Unknown',
+              description: book.selectedBook.volumeInfo.description || 'No description available',
+            }}
             />
           )}
         </TouchableOpacity>

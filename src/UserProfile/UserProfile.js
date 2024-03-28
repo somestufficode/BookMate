@@ -12,6 +12,14 @@ const UserProfile = ({ route }) => {
   const { width: screenWidth } = useWindowDimensions();
   const { userId } = route.params;
 
+
+  const secureUrl = (url) => {
+    if (url && url.startsWith('http://')) {
+        return url.replace('http://', 'https://');
+    }
+    return url;
+};
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -79,7 +87,7 @@ const UserProfile = ({ route }) => {
            <View style={[styles.imageContainer]}>
               <Image
                 style={styles.image}
-                source={{ uri: item.selectedBook.volumeInfo.imageLinks.thumbnail }}
+                source={{ uri: secureUrl(item.selectedBook.volumeInfo.imageLinks.thumbnail) }}
                 resizeMode="contain"
               />
             </View>

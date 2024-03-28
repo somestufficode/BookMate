@@ -12,10 +12,10 @@ import BookClubFrequency from './src/BookClubFrequency/BookClubFrequency';
 import BookBlurb from './src/BookBlurb/BookBlurb';
 import FinalBookForm from './src/FinalBookForm/FinalBookForm';
 import Login from './src/Login/Login';
-import { Provider } from 'react-redux'; // Import Provider from react-redux
-import store from './store/store'; // Import your Redux store
+import { Provider } from 'react-redux';
+import store from './store/store'; 
 import UserProfile from './src/UserProfile/UserProfile';
-import MainDiscovery from './src/MainDiscover/MainDiscover';
+// import MainDiscovery from './src/MainDiscover/MainDiscover';
 
 const Stack = createStackNavigator();
 
@@ -24,9 +24,8 @@ const App = () => {
     <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen name="MainDiscovery" component={MainDiscovery} />
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="MainSearch" component={MainSearch} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="MainSearch" component={MainSearch} />
         <Stack.Screen name="BookForm" component={BookForm} />
         <Stack.Screen name="BookDetails" component={BookDetailsPage} />
         <Stack.Screen name="AdditionalBookDetails" component={AdditionalBookDetails} />
